@@ -1,13 +1,16 @@
 class TasksController < ApplicationController
 
   def new
+    @task = Task.new
+    @categories = Category.all
   end
 
-  def create
-    @task = Task.new(params.require(:task).permit(:description, :status))
+    def create
+    @task = Task.new(params.require(:task).permit(:description, :status, :category_id))
     if @task.save
       redirect_to root_path
     else
+      @categories = Category.all
       render :new
     end
   end
@@ -23,10 +26,12 @@ class TasksController < ApplicationController
   else
     render :new
     end
+  end
 
     def destroy
-    task = Task.find(params[:id]) # não precisamos de @ pois não temos view que usará esse objeto
-    task.destroy #destrói a tarefa encontrada
+    task = Task.find(params[:id])
+    task.destroy
     redirect_to root_path
   end
+
 end
